@@ -2,11 +2,7 @@ var ingredients = "";
 var spoonLength;
 var quote = "";
 
-
-
-$(document).ready(
-  zenQuote()
-)
+$(document).ready(zenQuote());
 
 // ------------------------------------------
 /*
@@ -18,9 +14,6 @@ $(document).ready(
               make sure they're not empty.
 */
 // -----------------------------------------------
-
-
-
 
 $("#recipeFind").on("click", function (event) {
   event.preventDefault();
@@ -96,9 +89,9 @@ function createIngredientParameters(
 // ---------------------------------------
 
 function spoonApiCall() {
+  let api_Key = "ed5633765b5d4ff993becd328073c45b";
   //let api_Key = "1800b42b74cd42b688e40f416d0c69d9";
-  // let api_Key = "6d04fc1a81834943aa3e91c05f2755b8";
-  let api_Key = "ed5633765b5d4ff993becd328073c45b"
+  //let api_Key = "6d04fc1a81834943aa3e91c05f2755b8";
   let endpoint = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${api_Key}&includeIngredients=${ingredients}`;
 
   $.ajax({
@@ -204,9 +197,10 @@ $("#recipeList").on("click", function (event) {
   }
 
   console.log(current_ID);
+
+  let api_Key = "ed5633765b5d4ff993becd328073c45b";
   //let api_Key = "1800b42b74cd42b688e40f416d0c69d9";
-  // let api_Key = "6d04fc1a81834943aa3e91c05f2755b8";
-  let api_Key = "ed5633765b5d4ff993becd328073c45b"
+  //let api_Key = "6d04fc1a81834943aa3e91c05f2755b8";
   let urlCall = `https://api.spoonacular.com/recipes/${current_ID}/information?apiKey=${api_Key}`;
   $.ajax({
     url: urlCall,
@@ -241,16 +235,17 @@ PURPOSE: Parses the steps for the recipe, and grabs wine recommendations IF THEY
 */
 function getRecipe_Steps(passedArray) {
   var myArray = passedArray.analyzedInstructions[0].steps;
- // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-  
- if(passedArray.winePairing.productMatches != undefined &&  passedArray.winePairing.productMatches != null && passedArray.winePairing.productMatches[0] != undefined && passedArray.winePairing.productMatches[0] != null){
-  var wineDetails =   passedArray.winePairing.productMatches[0].title;
-                     }
-                    else{
-                    var wineDetails =  "N/A";
-                    };
+  // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-
+  if (
+    passedArray.winePairing.productMatches != undefined &&
+    passedArray.winePairing.productMatches != null &&
+    passedArray.winePairing.productMatches[0] != undefined
+  ) {
+    var wineDetails = passedArray.winePairing.productMatches[0].title;
+  } else {
+    var wineDetails = "N/A";
+  }
 
   console.log(`Listed Steps: ${myArray}`);
 
@@ -322,7 +317,7 @@ function getRecipe_Steps(passedArray) {
 
   $(".modal-content").append(newHfourIngredients);
 
-  for (var i = 0; i < newListIngredient.length; i++) {
+  for (var i = 0; i < recipe_ingredients.length; i++) {
     var newP = $("<p>");
     newP.html(`ingredient ${i + 1}: ${recipe_ingredients[i]}`);
     $(".modal-content").append(newP);
@@ -384,19 +379,19 @@ function getRecipe_Steps(passedArray) {
   }
 
   // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-if(wineDetails != "N/A"){
-  $(".modal-content").append(`<button class="wineDetails btn-primary">${wineDetails}</button>`);
-   // &&&&&&&&&&&&&&&&&&&&&&&&&&
-$(".wineDetails").on("click", function (event) {
-  event.preventDefault();
-  var capturedObject = event.target;
-  var wineText = $(capturedObject).text();
-  var subText = wineText.replace(" ", "+")
-  window.open(`https://www.wine-searcher.com/find/${subText}/1/usa-ct-#t2`);
-
-});
-}
-
+  if (wineDetails != "N/A") {
+    $(".modal-content").append(
+      `<button class="wineDetails btn-primary">${wineDetails}</button>`
+    );
+    // &&&&&&&&&&&&&&&&&&&&&&&&&&
+    $(".wineDetails").on("click", function (event) {
+      event.preventDefault();
+      var capturedObject = event.target;
+      var wineText = $(capturedObject).text();
+      var subText = wineText.replace(" ", "+");
+      window.open(`https://www.wine-searcher.com/find/${subText}/1/usa-ct-#t2`);
+    });
+  }
 }
 
 /*
@@ -437,17 +432,9 @@ function getRecipe_Ingredients(passedArray) {
   return ingredientContainer;
 }
 
-/*
-//---------------------
-zenQuote()
-
-PURPOSE: This API call grabs a random famous quote and places it on the home page.
-//---------------------
-*/
-
-function zenQuote(){
-var endpoint = "https://type.fit/api/quotes";
- $.ajax({
+function zenQuote() {
+  var endpoint = "https://type.fit/api/quotes";
+  $.ajax({
     url: endpoint,
     method: "GET",
     error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -458,19 +445,15 @@ var endpoint = "https://type.fit/api/quotes";
           ", Status Text: " +
           XMLHttpRequest.statusText
       );
-      
     },
   }).then(function (response) {
     var responseArray = JSON.parse(response);
     //JSON.stringify.response;
-   // console.log("quote response " + response);
+    // console.log("quote response " + response);
     //quote = response[0].text;
-    var indexNo = Math.floor((Math.random() * 100) + 1);
+    var indexNo = Math.floor(Math.random() * 100 + 1);
     quote = responseArray[indexNo].text;
     console.log("Quote: ", quote);
     $("#quote").append(quote);
- 
   });
 }
-    
-
